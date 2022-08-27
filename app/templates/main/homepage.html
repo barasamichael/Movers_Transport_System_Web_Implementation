@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}
+    {{super()}}
+    homepage
+{% endblock title%}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>{{app_name}}</h1>
+</div>
+
+<div class = "container">
+	<img src = "{{url_for('static', filename = 'home_image.png')}}" class = "img-rounded" style = "width : 100%; height : auto;">
+</div>
+
+
+<div class = "container">
+	<hr>
+	<p><a class = "btn btn-primary" href = "{{url_for('authentication.login_member')}}">
+		sign in
+	</a></p>
+	<h3 class = "text-secondary">our services</h3>
+	<p>We provides transportation for various agricultural goods for farmers between farmers and retail outlets. We transport goods such as:
+	<ul>
+		<li>cereals</li>
+		<li>livestock</li>
+		<li>perishable goods such as milk, eggs, fish and flowers</li>
+	</ul>
+	We also also transport farm inputs such as:
+	<ul>
+		<li>fertilizers</li>
+		<li>manure</li>
+		<li>herbicides</li>
+		<li>fungicides</li>
+		<li>seeds for planting</li>
+	</ul>
+	</p>
+
+	<h3 class = "text-secondary">registration requirements</h3>
+	<p>
+	Large scale farmers register individually as our members while small scale farmers are required to form groups in order to qualify for membership. A group can have a minimum of five members and is recognized by a group name, location, nature of produce and details of individual farmers. The group can then order for transport as a unit.
+	</p>
+
+	<h3 class = "text-secondary">transportation details</h3>
+	<p>
+	The company owns pickups, trailers, lorries and refrigerated trucks.
+	The charges for transporting goods are based on the means of transport, load capacity and destination.
+	</p>
+
+	<table class = "table table-responsive table-hover table-striped">
+            <caption>
+		<h3>
+			Transport charges based on vehicles, load capacity and destination
+		</h3>
+	    </caption>
+            <thead class = "thead-dark">
+                <tr>
+                	<th>transport means</th>
+                	<th>load capacity in tonnes</th>
+                	<th>cost per kilometer</th>
+		</tr>
+            </thead>
+	    <tbody>
+		{% for vehicle_make in vehicle_makes %}
+			<tr>
+				<td>{{vehicle_make.make_type}}</td>
+				<td>{{vehicle_make.capacity}}</td>
+				<td>{{vehicle_make.cost_per_km}}</td>
+        		</tr>
+		{% endfor %}
+            </tbody>
+        </table>
+
+</div>
+{% endblock page_content %}

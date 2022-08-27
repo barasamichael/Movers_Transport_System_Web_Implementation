@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}
+    {{super()}}
+    view member profile
+{% endblock title%}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>{{member.name}}</h1>
+</div>
+
+<div class = "container">
+	<img src = "{{url_for('static', filename = 'move/Farmer_5.jpeg')}}" class = "img-rounded" style = "width : 100%; height : auto;">
+</div>
+
+
+{% if member.status == "group" %}
+<div class = "container">
+	<table class = "table table-responsive table-hover table-striped">
+		<caption>
+			<h3>members</h3>
+		</caption>
+		<thead class = "thead-dark">
+			<tr>
+				<th>reg. ID</th>
+				<th>name</th>
+				<th>email address</th>
+				<th>phone number</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			{% for farmer in farmers %}
+			<tr>
+				<td>{{farmer.farmer_id}}</td>
+				<td>{{farmer.first_name}} {{farmer.middle_name}} {{farmer.last_name}}</td>
+				<td>{{farmer.email_address}}</td>
+				<td>{{farmer.phone_no}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div class = "container">
+		<p>
+		Want to add a new member?
+		<a class = 'btn btn-primary' href = "{{url_for('register.register_small_scale_farmer', member_id = member.member_id)}}">
+			Click here to register
+		</a>
+		</p>
+	</div>
+</div>
+{% endif %}
+
+<div class = "container">
+	<div class = "post-tabs">
+		<ul class = "nav nav-tabs">
+			<li>
+				<a href = "{{url_for('profiles.make_order', member_id = member.member_id)}}">
+					order now
+				</a>
+			</li>
+			<li>
+				<a href = "{{url_for('profiles.view_orders', member_id = member.member_id)}}">
+					orders
+				</a>
+			</li>
+			<li>
+				<a href = "{{url_for('profiles.make_order', member_id = member.member_id)}}">
+					deliveries
+				</a>
+			</li>
+			<li>
+				<a href = "{{url_for('profiles.make_order', member_id = member.member_id)}}">
+					summary
+				</a>
+			</li>
+			<li>
+				<a href = "{{url_for('profiles.make_order', member_id = member.member_id)}}">
+					financial records
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div class = "container">
+
+{% if tab_variable == 0 %}
+<caption>
+	<h3>want to make an order?</h3>
+</caption>
+
+{{wtf.quick_form(form)}}
+
+{% elif tab_variable == 1 %}
+<table class = "table table-responsive table-hover table-striped">
+	<caption>
+		<h3>orders made</h3>
+	</caption>
+	<thead class = 'thead-dark'>
+		<tr>
+			<th>order ID</th>
+			<th>order date</th>
+			<th>retail outlet</th>
+			<th>location</th>
+			<th>email address</th>
+			<th>phone number</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for order in orders %}
+		<tr>
+			<td>{{order.order_id}}</td>
+			<td>{{order.order_date}}</td>
+			<td>{{order.retail_name}}</td>
+			<td>{{order.retail_location}}</td>
+			<td>{{order.retail_email}}</td>
+			<td>{{order.retail_phone_no}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+{% if tab_variable == 2 %}                                                          {% endif %}
+
+{% if tab_variable == 3 %}                                                          {% endif %}
+
+{% if tab_variable == 4 %}                                                          {% endif %}
+
+</div>
+{% endblock page_content %}

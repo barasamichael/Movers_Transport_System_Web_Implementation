@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+    {{super()}}
+    login user
+{% endblock title%}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>log in</h1>
+</div>
+<div class = "col-md-4">
+	{{wtf.quick_form(form)}}
+</div>
+<div class = "container">
+	<p>
+	Not registered?
+	<a class = "btn btn-primary" href = "{{url_for('authentication.register_user')}}">
+		Click here to register
+	</a>
+	</p>
+</div>
+{% endblock page_content %}

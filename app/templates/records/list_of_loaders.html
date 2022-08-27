@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}
+    {{super()}}
+    list of loaders
+{% endblock title%}
+
+{% block page_content %}
+<div class = "container">
+	<table class = "table table-responsive table-hover table-striped">
+            <caption>
+		<h3>
+			List of loaders
+		</h3>
+	    </caption>
+            <thead class = "thead-dark">
+                <tr>
+                	<th>reg. ID</th>
+                	<th>name</th>
+			<th>gender</th>
+			<th>email address</th>
+		</tr>
+            </thead>
+	    <tbody>
+		{% for loader in loaders %}
+			<tr>
+				<td>{{loader.loader_id}}</td>
+				<td>{{loader.first_name}} {{loader.middle_name}} {{loader.last_name}}</td>
+				<td>{{loader.gender}}</td>
+				<td>{{loader.email_address}}</td>
+        		</tr>
+		{% endfor %}
+            </tbody>
+        </table>
+
+</div>
+{% endblock page_content %}

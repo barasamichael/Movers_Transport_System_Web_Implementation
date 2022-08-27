@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{super()}}
+    {{driver.first_name}} {{driver.middle_name}} {{driver.last_name}} - {{driver.driver_id}}
+{% endblock title %}
+
+{% block page_content %}
+    <div class = "profile-header">
+            <h2>
+		{{driver.first_name}} {{driver.middle_name}} {{driver.last_name}}
+            </h2>
+	    <caption>
+		    <h3>driver</h3>
+	    </caption>
+    </div>
+    
+    <div class = "container">
+        {% if driver.gender == 'female' %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/female-avatar.png')}}">
+        {% else %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/male-avatar.png')}}">
+        {% endif %}
+    </div>
+    
+    <div class = "container">
+        <table class = "table table-responsive table-hover table-striped">
+            <caption><h3>Personal Information</h3></caption>
+            <tbody>
+                <tr>
+		    <td>user ID</td>
+		    <td>{{driver.driver_id}}</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+		    <td>{{driver.first_name}} {{driver.middle_name}} {{driver.last_name}}</td>
+                </tr>
+                <tr>
+                    <td>gender</td>
+                    <td>{{driver.gender}}</td>
+                </tr>
+                <tr>
+                    <td>age</td>
+                    <td>{{ moment(driver.date_of_birth).fromNow()}}</td>
+                </tr>
+                <tr>
+                    <td>residence</td>
+                    <td>{{driver.residential_address}}</td>
+                </tr>
+                <tr>
+		    <td>phone number</td>
+                    <td>{{driver.phone_no}}</td>            
+                <tr>
+                    <td>email</td>
+                    <td>{{driver.email_address}}</td>
+                </tr>
+            </tbody>
+        </table>            
+    </div>
+        
+    <div class = "container">
+        <a class = 'btn btn-primary '>
+           <span class="glyphicon glyphicon-pencil"> </span> Edit Profile
+        </a>
+    </div>
+    <hr>
+    <div class = "post-tabs">
+	<ul class = "nav nav-tabs">
+		<li class = "active">
+			<a href = "{{url_for('profiles.driver_assigned_trips', driver_id = driver.driver_id)}}">
+				assigned trips
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.driver_offenses', driver_id = driver.driver_id)}}">
+				offenses
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.driver_financial_records', driver_id = driver.driver_id)}}">
+				financial records
+			</a>
+		</li>
+	</ul>
+    </div>
+    {% if driver_tab_variable == 0 %}
+    <div class = "container">
+	    <table class = "table table-responsive table-hover table-striped">
+		    <caption>
+			    <h3>list of scheduled trips</h3>
+		    </caption>
+		    <thead class = "thead-dark">
+			    <tr>
+				    <th>trip Id</th>
+				    <th>date</th>
+				    <th>vehicle</th>
+				    <th>type</th>
+				    <th>distance (in kilometers)</th>
+			    </tr>
+		    </thead>
+		    <tbody>
+			    {% for trip in future_trips %}
+			    <tr>
+			    <td>{{trip.trip_id}}</td>
+			    <td>{{trip.trip_date}}</td>
+			    <td>{{trip.plate_no}}</td>
+			    <td>{{trip.make_type}}</td>
+			    <td>{{trip.distance}}</td>
+			    </tr>
+			    {% endfor %}
+		    </tbody>
+	    </table>
+	    <table class = "table table-responsive table-hover table-striped">
+		    <caption>
+			    <h3>list of past trips</h3>
+		    </caption>
+		    <thead class = "thead-dark">
+                            <tr>
+                                    <th>trip Id</th>
+				    <th>date</th>
+                                    <th>vehicle</th>
+				    <th>type</th>
+				    <th>distance (in kilometers)</th>
+                            <tr>
+		    </thead>
+		    <tbody>
+			    {% for trip in past_trips %}
+			    <tr>
+			    <td>{{trip.trip_id}}</td>
+			    <td>{{trip.trip_date}}</td>
+			    <td>{{trip.plate_no}}</td>
+			    <td>{{trip.make_type}}</td>
+			    <td>{{trip.distance}}</td>
+			    </tr>
+			    {% endfor %}
+		    </tbody>
+	    </table>
+    </div>
+    {% elif driver_tab_variable == 1 %}
+    <div class = "container">
+    </div>
+    {% elif driver_tab_variable == 2 %}
+    <div class = "container">
+    </div>
+    {% endif %}
+{% endblock page_content %}

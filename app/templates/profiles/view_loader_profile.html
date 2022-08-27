@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{super()}}
+    {{loader.first_name}} {{loader.middle_name}} {{loader.last_name}} - {{loader.loader_id}}
+{% endblock title %}
+
+{% block page_content %}
+    <div class = "profile-header">
+            <h2>
+		{{loader.first_name}} {{loader.middle_name}} {{loader.last_name}}
+            </h2>
+	    <caption>
+		    <h3>loader</h3>
+	    </caption>
+    </div>
+    
+    <div class = "container">
+        {% if loader.gender == 'female' %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/female-avatar.png')}}">
+        {% else %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/male-avatar.png')}}">
+        {% endif %}
+    </div>
+    
+    <div class = "container">
+        <table class = "table table-responsive table-hover table-striped">
+            <caption><h3>Personal Information</h3></caption>
+            <tbody>
+                <tr>
+		    <td>loader ID</td>
+		    <td>{{loader.loader_id}}</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+		    <td>{{loader.first_name}} {{loader.middle_name}} {{loader.last_name}}</td>
+                </tr>
+                <tr>
+                    <td>gender</td>
+                    <td>{{loader.gender}}</td>
+                </tr>
+                <tr>
+                    <td>age</td>
+                    <td>{{ moment(loader.date_of_birth).fromNow()}}</td>
+                </tr>
+                <tr>
+                    <td>residence</td>
+                    <td>{{loader.residential_address}}</td>
+                </tr>
+                <tr>
+		    <td>phone number</td>
+                    <td>{{loader.phone_no}}</td>            
+                <tr>
+                    <td>email</td>
+                    <td>{{loader.email_address}}</td>
+                </tr>
+            </tbody>
+        </table>            
+    </div>
+        
+    <div class = "container">
+        <a class = 'btn btn-primary '>
+           <span class="glyphicon glyphicon-pencil"> </span> Edit Profile
+        </a>
+    </div>
+    <hr>
+    <div class = "post-tabs">
+	<ul class = "nav nav-tabs">
+		<li class = "active">
+			<a href = "{{url_for('profiles.loader_assigned_trips', loader_id = loader.loader_id)}}">
+				assigned trips
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.loader_financial_records', loader_id = loader.loader_id)}}">
+				financial records
+			</a>
+		</li>
+	</ul>
+    </div>
+    {% if loader_tab_variable == 0 %}
+    <div class = "container">
+	<table class = "table table-responsive table-hover table-striped">
+		<caption>
+			<h3>list of assigned trips</h3>
+		</caption>
+		<thead class = "thead-dark">
+			<tr>
+				<th>trip id</th>
+				<th>trip date</th>
+				<th>vehicle</th>
+				<th>type</th>
+				<th>driver</th>
+				<th>phone number</th>
+				<th>distance</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for trip in future_trips %}
+			<tr>
+				<td>{{trip.trip_id}}</td>
+				<td>{{trip.trip_date}}</td>
+				<td>{{trip.plate_no}}</td>
+				<td>{{trip.make_type}}</td>
+				<td>
+					{{trip.first_name}} {{trip.middle_name}} {{trip.last_name}}
+				</td>
+				<td>{{trip.phone_no}}</td>
+				<td>{{trip.distance}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+    </div>
+    {% elif loader_tab_variable == 1 %}
+    <div class = "container">
+    </div>
+    {% elif loader_tab_variable == 2 %}
+    <div class = "container">
+    </div>
+    {% endif %}
+{% endblock page_content %}

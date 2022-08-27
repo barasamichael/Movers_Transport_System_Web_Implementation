@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{super()}}
+    {{current_user.first_name}} {{current_user.last_name}}
+{% endblock title %}
+
+{% block page_content %}
+    <div class = "profile-header">
+            <h2>
+		    {{current_user.first_name}} {{current_user.last_name}}
+            </h2>
+    </div>
+    
+    <div class = "container">
+        {% if current_user.gender == 'female' %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/female-avatar.png')}}">
+        {% else %}
+            <img class = "img-rounded profile-thumbnail" size = '256' src = "{{url_for('static', filename = 'profiles/male-avatar.png')}}">
+        {% endif %}
+    </div>
+    
+    <div class = "container">
+        <table class = "table table-responsive table-hover table-striped">
+            <caption><h3>Personal Information</h3></caption>
+            <tbody>
+                <tr>
+		    <td>user ID</td>
+		    <td>{{current_user.id}}</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+		    <td>{{current_user.first_name}} {{current_user.last_name}}</td>
+                </tr>
+                <tr>
+                    <td>gender</td>
+                    <td>{{current_user.gender}}</td>
+                </tr>
+                <tr>
+                    <td>age</td>
+                    <td>{{ moment(current_user.date_of_birth).fromNow()}}</td>
+                </tr>
+                <tr>
+                    <td>residence</td>
+                    <td>{{current_user.residential_address}}</td>
+                </tr>
+                <tr>
+		    <td>phone number</td>
+                    <td>{{current_user.phone_no}}</td>            
+                <tr>
+                    <td>email</td>
+                    <td>{{current_user.email_address}}</td>
+                </tr>
+            </tbody>
+        </table>            
+    </div>
+        
+    <div class = "container">
+        <a class = 'btn btn-primary '>
+           <span class="glyphicon glyphicon-pencil"> </span> Edit Profile
+        </a>
+    </div>
+    <hr>
+    <div class = "post-tabs">
+	<ul class = "nav nav-tabs">
+		<li class = "active">
+			<a href = "{{url_for('profiles.user_view_trips', user_id = current_user.id)}}">
+				trips
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.user_registrations', user_id = current_user.id)}}">
+				registration
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.user_finance', user_id = current_user.id)}}">
+				finance
+			</a>
+		</li>
+		<li>
+                        <a href = "{{url_for('profiles.user_services', user_id = current_user.id)}}">
+                                services
+                        </a>
+                </li>
+		<li>
+			<a href = "{{url_for('profiles.user_summary', user_id = current_user.id)}}" >
+				summary
+			</a>
+		</li>
+		<li>
+			<a href = "{{url_for('profiles.user_graphs', user_id = current_user.id)}}">
+				graphs
+			</a>
+		</li>
+	</ul>
+    </div>
+    <div class = "container">
+    {% if user_tab_variable == 0 %}
+    <div>
+	    <h3>
+		    <a href = "{{url_for('register.register_trip', user_id = current_user.id)}}">
+			    click here to organize a trip
+		    </a>
+	    </h3>
+    </div>
+	    <table class = "table table-responsive table-hover table-striped">
+		    <caption>
+			    <h3>list of delivery trips</h3>
+		    </caption>
+		    <thead class = "thead-dark">
+			    <tr>
+				    <th>trip ID</th>
+				    <th>date</th>
+				    <th>vehicle</th>
+				    <th>type</th>
+				    <th>driver</th>
+				    <th>phone number</th>
+				    <th>distance</th>
+				    <th>cost (Ksh)</th>
+			    </tr>
+		    </thead>
+		    <tbody>
+			    {% for trip in future_trips %}
+			    {% set total_cost = ((trip.distance * trip.cost_per_km) + (trip.no_of_loaders * trip.loader_payment) + trip.driver_payment) %}
+			    <tr>
+				    <td>
+					    <a href = "{{url_for('profiles.view_trip_details', trip_id = trip.trip_id)}}">
+						    {{trip.trip_id}}
+					    </a>
+				    </td>
+				    <td>{{trip.trip_date}}</td>
+				    <td>{{trip.plate_no}}</td>
+				    <td>{{trip.make_type}}</td>
+				    <td>{{trip.first_name}} {{trip.middle_name}} {{trip.last_name}}</td>
+				    <td>{{trip.phone_no}}</td>
+				    <td>{{trip.distance}}</td>
+				    <td>{{total_cost}}</td>
+			    </tr>
+			    {% endfor %}
+		    </tbody>
+	    </table>
+	    <table class = "table table-responsive table-hover table-striped">
+                    <caption>
+                            <h3>list of past trips</h3>                                             </caption>                                                                          <thead class = "thead-dark">                                                                <tr>
+                                    <th>trip ID</th>                                                                    <th>date</th>
+                                    <th>vehicle</th>
+                                    <th>type</th>                                                                       <th>driver</th>                                                                     <th>phone number</th>
+                                    <th>distance</th>
+				    <th>cost (Ksh)</th>                                                         </tr>                                                                       </thead>
+                    <tbody>                                                                                     {% for trip in past_trips %}
+			    {% set total_cost = ((trip.distance * trip.cost_per_km) + (trip.no_of_loaders * trip.loader_payment) + trip.driver_payment) %}                                          	<tr>
+				    <td>
+					    <a href = "{{url_for('profiles.view_trip_details', trip_id = trip.trip_id)}}">
+						    {{trip.trip_id}}
+					    </a>
+				    </td>
+                                    <td>{{trip.trip_date}}</td>
+                                    <td>{{trip.plate_no}}</td>                                                          <td>{{trip.make_type}}</td>                                                         <td>{{trip.first_name}} {{trip.middle_name}} {{trip.last_name}}</td>                                                                                                    <td>{{trip.phone_no}}</td>                                                          <td>{{trip.distance}}</td>                                                          <td>{{total_cost}}</td>
+			    </tr>
+			    {% endfor %}
+		    </tbody>
+            </table>
+
+    {% elif user_tab_variable == 1 %}
+    <div class = "container-fluid">
+    <div class = "row">
+    <div class = "col-md-6">
+	    <h4 class = "text-uppercase font-weight-bold">Register</h4>
+
+	    <p><a href = "{{url_for('register.register_vehicle')}}">vehicle</a></p>
+	    <p><a href = "{{url_for('register.register_vehicle_make')}}">
+		    vehicle make
+	    </a></p>
+	    <p><a href = "{{url_for('register.register_driver')}}">driver</a></p>
+	    <p><a href = "{{url_for('register.register_loader')}}">loader</a></p>
+	    <p><a href = "{{url_for('register.register_offence')}}">offense</a></p>
+	    <p><a href = "{{url_for('register.register_good')}}">commodity</a></p>
+    </div>
+    <div class = "col-md-6">
+	    <h4 class = "text-uppercase font-weight-bold">view records</h4>
+	    <p><a href = "{{url_for('records.list_of_members')}}">members</a></p>
+
+	    <p>
+	    <a href = "{{url_for('records.list_of_small_scale_farmers')}}">
+		    small scale farmers
+	    </a>
+	    </p>
+
+	    <p><a href = "{{url_for('records.list_of_vehicles')}}">vehicles</a></p>
+	    <p><a href = "{{url_for('records.list_of_vehicle_makes')}}">vehicle makes</a></p>
+	    <p><a href = "{{url_for('records.list_of_drivers')}}">drivers</a></p>
+	    <p><a href = "{{url_for('records.list_of_loaders')}}">loaders</a></p>
+	    <p><a href = "{{url_for('records.list_of_goods')}}">commodities</a></p>
+	    <p><a href = "{{url_for('records.list_of_offences')}}">offenses</a></p>
+    </div>
+    </div>
+    </div>
+
+    {% elif user_tab_variable == 2 %}
+
+    {% elif user_tab_variable == 3 %}
+
+    <div class = "container">
+	    <h3 class = "text-muted">
+		    enter service details
+	    </h3>
+	    {{ wtf.quick_form(form) }}
+    </div>
+
+    <table class = "table table-responsive table-hover table-triped">
+	    <caption>
+		    <h3>
+			    records of services
+		    </h3>
+	    </caption>
+	    <thead class = "thead-dark">
+		    <tr>
+			    <th>service ID</th>
+			    <th>date</th>
+			    <th>vehicle</th>
+			    <th>type</th>
+			    <th>description</th>
+			    <th>cost</th>
+		    </tr>
+	    </thead>
+	    <tbody>
+		    {% for service in services %}
+		    <tr>
+			    <td>{{service.service_id}}</td>
+			    <td>{{service.date}}</td>
+			    <td>{{service.plate_no}}</td>
+			    <td>{{service.make_type}}</td>
+			    <td>{{service.description}}</td>
+			    <td>{{service.cost}}</td>
+		    </tr>
+		    {% endfor %}
+	    </tbody>
+    </table>
+
+    {% elif user_tab_variable == 4 %}
+    <table class = "table table-responsive table-hover table-striped">
+	    <caption>
+		    <h3>
+			    An account of monthly wages
+		    </h3>
+	    </caption>
+	    <thead class = "thead-dark">
+		    <tr>
+			    <th>month</th>
+			    <th>number of trips</th>
+			    <th>cost of services</th>
+			    <th>labor cost</th>
+			    <th>net tax</th>
+			    <th>miscellaneous</th>
+			    <th>total</th>
+		    </tr>
+	    </thead>
+	    <tbody>
+		    {% for item in monthly_data %}
+		    <tr>
+			    <td>{{item.trip_date}}</td>
+		    </tr>
+		    {% endfor %}
+	    </tbody>
+    </table>
+    <table class = "table table-responsive table-hover table-striped">
+	    <caption>
+		    <h3>
+			    An account of daily wages
+		    </h3>
+	    </caption>
+	    <thead class = "thead-dark">
+		<tr>
+		    <th>date</th>
+		    <th>number of trips</th>
+		    <th>cost of services</th>
+		    <th>labor cost</th>
+		    <th>net tax</h>
+		    <th>miscellaneous</th>
+		    <th>total</th>
+		</tr>
+	    </thead>
+	    <tbody>
+		{% for item in daily_data %}
+		<tr>
+			<td>{{item.trip_date}}</td>
+		</tr>
+		{% endfor %}
+	    </tbody>
+    </table>
+
+    {% elif user_tab_variable == 5 %}
+
+    {% endif %}
+    </div>
+{% endblock page_content %}
